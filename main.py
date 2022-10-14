@@ -88,7 +88,7 @@ def main():
             speaking (result)
 
         elif "your name" in query:
-            speaking("I am CARLSON, Compiled Artificial Realistic")
+            speaking("I am CARLSON, Computer Automated Robotic Listening Software Operations Navigation. How can I be of service sir?")
             continue
 
         elif "search web" in query:
