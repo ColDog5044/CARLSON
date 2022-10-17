@@ -8,6 +8,8 @@ import os
 import yfinance as yf
 import pyjokes
 import speedtest
+import pyautogui
+from functions.keyboard import volumeup, volumedown
 
 # Voice Setup
 engine = pyttsx3.init("sapi5")
@@ -39,7 +41,6 @@ def takeCommand():
     return query
 
 # Main Function
-
 def main():
     while True:
         query = takeCommand().lower()
@@ -87,6 +88,24 @@ def main():
                 continue
 
             ########## MEDIA CONTROLS ##########
+
+            elif "resume" in query:
+                pyautogui.press("k")
+                continue
+            
+            elif "pause" in query:
+                pyautogui.press("k")
+                continue
+
+            elif "mute" in query:
+                pyautogui.press("m")
+                continue
+
+            elif "volume up" in query:
+                volumeup()
+
+            elif "volume down" in query:
+                volumedown()
 
             ########## CARLSON REQUESTS ##########
 
