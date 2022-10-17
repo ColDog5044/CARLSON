@@ -1,4 +1,4 @@
-from http.client import CONFLICT
+# Imported Libraries
 import pyttsx3
 import speech_recognition as sr
 import webbrowser
@@ -16,7 +16,7 @@ from functions.media import volumeup, volumedown, volumemute, playpause, nexttra
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[0].id)
-engine.setProperty("rate",200)
+engine.setProperty("rate",180)
 
 # Speak Message
 def speak(audio):
