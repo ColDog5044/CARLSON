@@ -86,6 +86,8 @@ def main():
                 speak(pyjokes.get_joke())
                 continue
 
+            ########## MEDIA CONTROLS ##########
+
             ########## CARLSON REQUESTS ##########
 
             elif "test internet speed" in query:
@@ -95,6 +97,17 @@ def main():
                 speak(f"Internet Download Speed is {downloadSpeed} Megabytes.")
                 speak(f"Internet Upload Speed is {uploadSpeed} Megabytes.")
                 
+
+
+                
+            elif "disengage glass box" in query:
+                speak("Are you sure you want to shutdown?")
+                shutdown = input("Do you wish to shutdown your computer? Yes/No")
+                if shutdown == "yes":
+                    os.system("shutdown /s /t 1")
+
+                elif shutdown == "no":
+                    break
 
 
 
