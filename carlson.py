@@ -7,6 +7,7 @@ import pywhatkit
 import os
 import yfinance as yf
 import pyjokes
+import speedtest
 
 # Voice Setup
 engine = pyttsx3.init("sapi5")
@@ -18,20 +19,6 @@ engine.setProperty("rate",200)
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
-
-def welcome():
-    hour = int(datetime.datetime.now().hour)
-    if hour>=0 and hour<12:
-        speak("Good Morning,")
-    elif hour >=12 and hour <18:
-        speak("Good Afternoon,")
-    else:
-        speak("Good Evening,")
-    speak('''CARLSON is at your service sir.''')
-
-
-
-
 
 # listen to microphone and return the audio as text using google
 def takeCommand():
@@ -51,26 +38,67 @@ def takeCommand():
         return "None"
     return query
 
-
-# Return the weekday name
-def query_day():
-    day = datetime.date.today()
-    weekday = day.weekday()
-    mapping = {
-        0:"Monday",1:"Tuesday",2:"Wednesday",3:"Thursday",4:"Friday",5:"Saturday",6:"Sunday"
-    }
-    try:
-        speak(f"Today is {mapping[weekday]}.")
-    except:
-        pass
-
-# Returns the time
-def query_time():
-    time = datetime.datetime.now().strftime("%I:%M:%S")
-    speak(f"The current time is {time[0:2]} {time[3:5]}")
-
+# Main Function
 
 def main():
+    while True:
+        query = takeCommand().lower()
+        if "carlson" and "wake up" in query:
+            welcome()
+
+        while True:
+            query = takeCommand().lower()
+            if "carlson" and "sleep" in query:
+                speak("Ok sir, you can call me anytime.")
+                break
+            
+            ########## CARLSON INTERACTION ##########
+
+            elif "what is your name" in query:
+                speak("I am CARLSON, Computer Automated Robotic Listening Software Operations Navigation. How can I be of service sir?")
+                continue
+
+            elif "who created you" in query:
+                speak("I was created by Collin Laney, on October Thirteenth, Twenty Twenty-Two.")
+                continue
+
+            elif "what is your birth day" in query:
+                speak("October Thirteenth, Twenty Twenty-Two.")
+                continue
+
+            elif "hello" in query:
+                speak("Hello sir, how are you?")
+                continue
+
+            elif "i am" in query:
+                speak("That's great sir.")
+                continue
+            
+            elif "how are you" in query:
+                speak("Perfect sir.")
+                continue
+            
+            elif "thank you" in query:
+                speak("You are welcome sir.")
+                continue
+
+            elif "joke" in query:
+                speak(pyjokes.get_joke())
+                continue
+
+            ########## CARLSON REQUESTS ##########
+
+            elif "test internet speed" in query:
+                internet = speedtest.Speedtest()
+                downloadSpeed = internet.download()/1048576     # Megabyte = 1024*1024 Bytes
+                uploadSpeed   = internet.upload()/1048576
+                speak(f"Internet Download Speed is {downloadSpeed} Megabytes.")
+                speak(f"Internet Upload Speed is {uploadSpeed} Megabytes.")
+                
+
+
+
+def mmain():
     welcome()
     start = True
     while(start):
@@ -86,20 +114,12 @@ def main():
             webbrowser.open("https://google.com")
             continue
 
-        elif "disengage the studio" in query:
-            speak("disengaging the studio")
-            break
-
         elif "search wikipedia" in query:
             speak("On it sir")
             query = query.replace("wikipedia", "")
             result = wikipedia.summary(query,sentences=2)
             speak("Found on wikipedia.")
             speak (result)
-
-        elif "your name" in query:
-            speak("I am CARLSON, Computer Automated Robotic Listening Software Operations Navigation. How can I be of service sir?")
-            continue
 
         elif "search web" in query:
             pywhatkit.search(query)
@@ -109,10 +129,6 @@ def main():
         elif "play" in query:
             speak(f"playing {query}")
             pywhatkit.playonyt(query)
-            continue
-
-        elif "joke" in query:
-            speak(pyjokes.get_joke())
             continue
 
         elif "stock price" in query:
@@ -128,5 +144,33 @@ def main():
             except:
                 speak(f"Sorry sir, I found no data for {search}")
             continue
+
+# Welcome Greeting
+def welcome():
+    hour = int(datetime.datetime.now().hour)
+    if hour>=0 and hour<12:
+        speak("Good Morning,")
+    elif hour >=12 and hour <18:
+        speak("Good Afternoon,")
+    else:
+        speak("Good Evening,")
+    speak('''CARLSON is at your service sir.''')
+
+# Return the weekday name
+def weekday():
+    day = datetime.date.today()
+    weekday = day.weekday()
+    mapping = {
+        0:"Monday",1:"Tuesday",2:"Wednesday",3:"Thursday",4:"Friday",5:"Saturday",6:"Sunday"
+    }
+    try:
+        speak(f"Today is {mapping[weekday]}.")
+    except:
+        pass
+
+# Returns the time
+def currentTime():
+    time = datetime.datetime.now().strftime("%I:%M:%S")
+    speak(f"The current time is {time[0:2]} {time[3:5]}")
 
 main()
