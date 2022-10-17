@@ -8,33 +8,48 @@ import os
 import yfinance as yf
 import pyjokes
 
-
-# listen to microphone and return the audio as text using google
-def transform():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        r.pause_threshold = 0.8
-        said = r.listen(source)
-        try:
-            print("I am listening")
-            query = r.recognize_google(said, language="en")
-            return query
-        except sr.UnknownValueError:
-            print("Sorry, I did not understand")
-            return "I am waiting"
-        except sr.RequestError:
-            print("Sorry, the service is down")
-            return "I am waiting"
-        except:
-            return "I am waiting"
+# Voice Setup
+engine = pyttsx3.init("sapi5")
+voices = engine.getProperty("voices")
+engine.setProperty("voice", voices[0].id)
+engine.setProperty("rate",200)
 
 # Speak Message
-def speaking(message):
-    engine = pyttsx3.init()
-    id = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-AU_JAMES_11.0"
-    engine.setProperty("voice",id)
-    engine.say(message)
+def speak(audio):
+    engine.say(audio)
     engine.runAndWait()
+
+def welcome():
+    hour = int(datetime.datetime.now().hour)
+    if hour>=0 and hour<12:
+        speak("Good Morning,")
+    elif hour >=12 and hour <18:
+        speak("Good Afternoon,")
+    else:
+        speak("Good Evening,")
+    speak('''CARLSON is at your service sir.''')
+
+
+
+
+
+# listen to microphone and return the audio as text using google
+def takeCommand():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.pause_threshold = 1
+        r.energy_threshold = 300
+        audio = r.listen(source,0,4)
+
+    try:
+        print("Understanding...")
+        query = r.recognize_google(audio,language="en-us")
+        print(f"You Said: {query}\n")
+    except Exception as e:
+        print ("Say that again")
+        return "None"
+    return query
 
 
 # Return the weekday name
@@ -45,64 +60,59 @@ def query_day():
         0:"Monday",1:"Tuesday",2:"Wednesday",3:"Thursday",4:"Friday",5:"Saturday",6:"Sunday"
     }
     try:
-        speaking(f"Today is {mapping[weekday]}.")
+        speak(f"Today is {mapping[weekday]}.")
     except:
         pass
 
 # Returns the time
 def query_time():
     time = datetime.datetime.now().strftime("%I:%M:%S")
-    speaking(f"The current time is {time[0:2]} {time[3:5]}")
+    speak(f"The current time is {time[0:2]} {time[3:5]}")
 
-# Welcome Message
-def welcome():
-    query_day()
-    query_time()
-    speaking('''CARLSON is at your service sir.''')
 
 def main():
     welcome()
     start = True
     while(start):
-        query = transform().lower()
+        query = takeCommand().lower()
 
         if "open youtube" in query:
-            speaking("opening youtube")
+            speak("opening youtube")
             webbrowser.open("https://youtube.com")
             continue
 
         elif "start chrome" in query:
-            speaking("starting chrome")
+            speak("starting chrome")
             webbrowser.open("https://google.com")
             continue
 
         elif "disengage the studio" in query:
-            speaking("disengaging the studio")
+            speak("disengaging the studio")
             break
 
         elif "search wikipedia" in query:
-            speaking("On it sir")
+            speak("On it sir")
             query = query.replace("wikipedia", "")
             result = wikipedia.summary(query,sentences=2)
-            speaking("Found on wikipedia.")
-            speaking (result)
+            speak("Found on wikipedia.")
+            speak (result)
 
         elif "your name" in query:
-            speaking("I am CARLSON, Computer Automated Robotic Listening Software Operations Navigation. How can I be of service sir?")
+            speak("I am CARLSON, Computer Automated Robotic Listening Software Operations Navigation. How can I be of service sir?")
             continue
 
         elif "search web" in query:
             pywhatkit.search(query)
-            speaking("This is what I found for you sir")
+            speak("This is what I found for you sir")
             continue
 
         elif "play" in query:
-            speaking(f"playing {query}")
+            speak(f"playing {query}")
             pywhatkit.playonyt(query)
             continue
 
         elif "joke" in query:
-            speaking(pyjokes.get_joke())
+            speak(pyjokes.get_joke())
             continue
 
         elif "stock price" in query:
@@ -114,9 +124,9 @@ def main():
                 stock = lookup[search]
                 stock = yf.Ticker(stock)
                 currentprice = stock.info["regularMarketPrice"]
-                speaking(f"found it sir, the price for {search} is {currentprice} dollars")
+                speak(f"found it sir, the price for {search} is {currentprice} dollars")
             except:
-                speaking(f"Sorry sir, I found no data for {search}")
+                speak(f"Sorry sir, I found no data for {search}")
             continue
 
 main()
