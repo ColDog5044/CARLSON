@@ -1,3 +1,4 @@
+from http.client import CONFLICT
 import pyttsx3
 import speech_recognition as sr
 import webbrowser
@@ -9,7 +10,7 @@ import yfinance as yf
 import pyjokes
 import speedtest
 import pyautogui
-from functions.keyboard import volumeup, volumedown
+from functions.media import volumeup, volumedown, volumemute, playpause, nexttrack, previoustrack
 
 # Voice Setup
 engine = pyttsx3.init("sapi5")
@@ -89,23 +90,29 @@ def main():
 
             ########## MEDIA CONTROLS ##########
 
-            elif "resume" in query:
-                pyautogui.press("k")
-                continue
-            
-            elif "pause" in query:
-                pyautogui.press("k")
+            elif "resume" or "pause" in query:
+                playpause()
                 continue
 
             elif "mute" in query:
-                pyautogui.press("m")
+                volumemute
                 continue
 
             elif "volume up" in query:
                 volumeup()
+                continue
 
             elif "volume down" in query:
                 volumedown()
+                continue
+            
+            elif "skip" in query:
+                nexttrack()
+                continue
+
+            elif "previous" in query:
+                previoustrack()
+                continue
 
             ########## CARLSON REQUESTS ##########
 
