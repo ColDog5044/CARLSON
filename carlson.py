@@ -1,5 +1,4 @@
 # Imported Libraries
-import imp
 import pyttsx3
 import speech_recognition as sr
 import webbrowser
@@ -11,9 +10,11 @@ import yfinance as yf
 import pyjokes
 import speedtest
 import pyautogui
+import requests
+from random import choice
 from functions.media import volumeup, volumedown, volumemute, playpause, nexttrack, previoustrack
 from functions.programs import startNotepad, startCalc, startCMD, startPWSH
-from functions.utils import responses
+from functions.utils import requestResponses, morningResponses
 
 # Voice Setup
 engine = pyttsx3.init("sapi5")
@@ -120,6 +121,7 @@ def main():
             ########## CARLSON REQUESTS ##########
 
             elif "test internet speed" in query:
+                speak(choice(requestResponses))
                 internet = speedtest.Speedtest()
                 downloadSpeed = internet.download()/1048576     # Megabyte = 1024*1024 Bytes
                 uploadSpeed   = internet.upload()/1048576
@@ -127,7 +129,7 @@ def main():
                 speak(f"Internet Upload Speed is {uploadSpeed} Megabytes.")
                 
             elif "wikipedia" in query:
-                speak("On it sir.")
+                speak(choice(requestResponses))
                 query = query.replace("wikipedia", "")
                 result = wikipedia.summary(query,sentences=2)
                 speak("Here is what I found on Wikipedia.")
@@ -135,17 +137,20 @@ def main():
                 continue
 
             elif "search" in query:
+                speak(choice(requestResponses))
                 query = query.replace("search", "")
                 pywhatkit.search(query)
                 speak("This is what I found for you sir.")
                 continue
 
             elif "open google" in query:
-                speak("On it sir.")
+                speak(choice(requestResponses))
+                speak(choice(requestResponses))
                 webbrowser.open("https://google.com")
                 continue
 
             elif "stock price" in query:
+                speak(choice(requestResponses))
                 search = query.split("of")[-1].strip()
                 lookup = {"apple":"AAPL",
                           "amazon":"AMZN",
@@ -174,7 +179,7 @@ def main():
 def welcome():
     hour = datetime.now().hour
     if hour>=0 and hour<12:
-        speak("Good Morning,")
+        speak(choice(morningResponses))
     elif hour >=12 and hour <18:
         speak("Good Afternoon,")
     else:
