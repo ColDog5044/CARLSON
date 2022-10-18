@@ -1,4 +1,5 @@
 # Imported Libraries
+import imp
 import pyttsx3
 import speech_recognition as sr
 import webbrowser
@@ -11,6 +12,8 @@ import pyjokes
 import speedtest
 import pyautogui
 from functions.media import volumeup, volumedown, volumemute, playpause, nexttrack, previoustrack
+from functions.programs import startNotepad, startCalc, startCMD, startPWSH
+from functions.utils import responses
 
 # Voice Setup
 engine = pyttsx3.init("sapi5")
@@ -45,12 +48,12 @@ def takeCommand():
 def main():
     while True:
         query = takeCommand().lower()
-        if "carlson" and "wake up" in query:
+        if "carlson" in query and "wake up" in query:
             welcome()
 
         while True:
             query = takeCommand().lower()
-            if "carlson" and "sleep" in query:
+            if "carlson" in query and "sleep" in query:
                 speak("Ok sir, you can call me anytime.")
                 break
             
@@ -72,7 +75,7 @@ def main():
                 speak("Hello sir, how are you?")
                 continue
 
-            elif "i am" in query:
+            elif "i am" in query or "i'm" in query:
                 speak("That's great sir.")
                 continue
             
@@ -90,7 +93,7 @@ def main():
 
             ########## MEDIA CONTROLS ##########
 
-            elif "resume" or "pause" in query:
+            elif "resume" in query or "pause" in query:
                 playpause()
                 continue
 
@@ -123,9 +126,39 @@ def main():
                 speak(f"Internet Download Speed is {downloadSpeed} Megabytes.")
                 speak(f"Internet Upload Speed is {uploadSpeed} Megabytes.")
                 
+            elif "wikipedia" in query:
+                speak("On it sir.")
+                query = query.replace("wikipedia", "")
+                result = wikipedia.summary(query,sentences=2)
+                speak("Here is what I found on Wikipedia.")
+                speak(result)
+                continue
 
+            elif "search" in query:
+                query = query.replace("search", "")
+                pywhatkit.search(query)
+                speak("This is what I found for you sir.")
+                continue
 
-                
+            elif "open google" in query:
+                speak("On it sir.")
+                webbrowser.open("https://google.com")
+                continue
+
+            elif "stock price" in query:
+                search = query.split("of")[-1].strip()
+                lookup = {"apple":"AAPL",
+                          "amazon":"AMZN",
+                          "google":"GOOGL"}
+                try:
+                    stock = lookup[search]
+                    stock = yf.Ticker(stock)
+                    currentprice = stock.info["regularMarketPrice"]
+                    speak(f"Found it sir, the price for {search} is {currentprice} dollars.")
+                except:
+                    speak(f"Sorry sir, I found no data for {search}.")
+                continue
+
             elif "disengage glass box" in query:
                 speak("Are you sure you want to shutdown?")
                 shutdown = input("Do you wish to shutdown your computer? Yes/No")
@@ -134,59 +167,12 @@ def main():
 
                 elif shutdown == "no":
                     break
-
-
-
-def mmain():
-    welcome()
-    start = True
-    while(start):
-        query = takeCommand().lower()
-
-        if "open youtube" in query:
-            speak("opening youtube")
-            webbrowser.open("https://youtube.com")
-            continue
-
-        elif "start chrome" in query:
-            speak("starting chrome")
-            webbrowser.open("https://google.com")
-            continue
-
-        elif "search wikipedia" in query:
-            speak("On it sir")
-            query = query.replace("wikipedia", "")
-            result = wikipedia.summary(query,sentences=2)
-            speak("Found on wikipedia.")
-            speak (result)
-
-        elif "search web" in query:
-            pywhatkit.search(query)
-            speak("This is what I found for you sir")
-            continue
-
-        elif "play" in query:
-            speak(f"playing {query}")
-            pywhatkit.playonyt(query)
-            continue
-
-        elif "stock price" in query:
-            search = query.split("of")[-1].strip()
-            lookup = {"apple":"AAPL",
-                      "amazon":"AMZN",
-                      "google":"GOOGL"}
-            try:
-                stock = lookup[search]
-                stock = yf.Ticker(stock)
-                currentprice = stock.info["regularMarketPrice"]
-                speak(f"found it sir, the price for {search} is {currentprice} dollars")
-            except:
-                speak(f"Sorry sir, I found no data for {search}")
-            continue
+            
+########## FUNCTIONS ##########
 
 # Welcome Greeting
 def welcome():
-    hour = int(datetime.datetime.now().hour)
+    hour = datetime.now().hour
     if hour>=0 and hour<12:
         speak("Good Morning,")
     elif hour >=12 and hour <18:
@@ -206,10 +192,5 @@ def weekday():
         speak(f"Today is {mapping[weekday]}.")
     except:
         pass
-
-# Returns the time
-def currentTime():
-    time = datetime.datetime.now().strftime("%I:%M:%S")
-    speak(f"The current time is {time[0:2]} {time[3:5]}")
 
 main()
