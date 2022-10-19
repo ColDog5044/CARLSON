@@ -12,6 +12,7 @@ import speedtest
 import pyautogui
 import requests
 from random import choice
+from functions.email import emailList
 from functions.media import volumeup, volumedown, volumemute, playpause, nexttrack, previoustrack
 from functions.programs import startNotepad, startCalc, startCMD, startPWSH
 from functions.utils import requestResponses, morningResponses
@@ -163,6 +164,9 @@ def main():
                 except:
                     speak(f"Sorry sir, I found no data for {search}.")
                 continue
+
+            elif "send email" in query:
+                speak("Who should I send an email to?")
 
             elif "disengage glass box" in query:
                 speak("Are you sure you want to shutdown?")
