@@ -167,6 +167,9 @@ def main():
 
             elif "send email" in query:
                 speak("Who should I send an email to?")
+                speak("What should be the subject?")
+                speak("What do you want to say?")
+                speak(choice(requestResponses))
 
             elif "disengage glass box" in query:
                 speak("Are you sure you want to shutdown?")
