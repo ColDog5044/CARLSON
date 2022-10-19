@@ -1,4 +1,5 @@
 # Imported Libraries
+from email import message
 import pyttsx3
 import speech_recognition as sr
 import webbrowser
@@ -12,7 +13,7 @@ import speedtest
 import pyautogui
 import requests
 from random import choice
-from functions.email import emailList
+import functions.email
 from functions.media import volumeup, volumedown, volumemute, playpause, nexttrack, previoustrack
 from functions.programs import startNotepad, startCalc, startCMD, startPWSH
 from functions.utils import requestResponses, morningResponses
@@ -118,6 +119,24 @@ def main():
             elif "previous" in query:
                 previoustrack()
                 continue
+            
+            ########## SYSTEM APPLICATIONS ##########
+
+            elif "start notepad" in query:
+                speak(choice(requestResponses))
+                startNotepad()
+
+            elif "start calculator" in query:
+                speak(choice(requestResponses))
+                startCalc()
+            
+            elif "start cmd" in query:
+                speak(choice(requestResponses))
+                startCMD()
+            
+            elif "start power shell" in query:
+                speak(choice(requestResponses))
+                startPWSH()
 
             ########## CARLSON REQUESTS ##########
 
@@ -167,9 +186,15 @@ def main():
 
             elif "send email" in query:
                 speak("Who should I send an email to?")
+                recipient = takeCommand().lower
                 speak("What should be the subject?")
+                subject = takeCommand().upper
                 speak("What do you want to say?")
-                speak(choice(requestResponses))
+                body = takeCommand()
+                if functions.email.sendEmail(recipient, subject, body):
+                    speak(choice(requestResponses))
+                else:
+                    speak("Something went wrong while sending the email sir.")
 
             elif "disengage glass box" in query:
                 speak("Are you sure you want to shutdown?")
