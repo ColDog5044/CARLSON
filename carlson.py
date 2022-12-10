@@ -1,5 +1,4 @@
 # Imported Libraries
-from email import message
 import pyttsx3
 import speech_recognition as sr
 import webbrowser
@@ -13,7 +12,6 @@ import speedtest
 import pyautogui
 import requests
 from random import choice
-import functions.email
 from functions.media import volumeup, volumedown, volumemute, playpause, nexttrack, previoustrack
 from functions.programs import startNotepad, startCalc, startCMD, startPWSH
 from functions.utils import requestResponses, morningResponses
@@ -184,7 +182,7 @@ def main():
                     speak(f"Sorry sir, I found no data for {search}.")
                 continue
 
-            elif "send email" in query:
+            #elif "send email" in query:
                 speak("Who should I send an email to?")
                 recipient = takeCommand().lower
                 speak("What should be the subject?")
