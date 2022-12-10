@@ -68,7 +68,7 @@ def main():
                 speak("I was created by Collin Laney, on October Thirteenth, Twenty Twenty-Two.")
                 continue
 
-            elif "what is your birth day" in query:
+            elif "what is your birthday" in query:
                 speak("October Thirteenth, Twenty Twenty-Two.")
                 continue
 
@@ -132,19 +132,20 @@ def main():
                 speak(choice(requestResponses))
                 startCMD()
             
-            elif "start power shell" in query:
+            elif "start powershell" in query:
                 speak(choice(requestResponses))
                 startPWSH()
 
             ########## CARLSON REQUESTS ##########
 
-            elif "test internet speed" in query:
-                speak(choice(requestResponses))
-                internet = speedtest.Speedtest()
-                downloadSpeed = internet.download()/1048576     # Megabyte = 1024*1024 Bytes
-                uploadSpeed   = internet.upload()/1048576
-                speak(f"Internet Download Speed is {downloadSpeed} Megabytes.")
-                speak(f"Internet Upload Speed is {uploadSpeed} Megabytes.")
+            #elif "test internet speed" in query:
+            #    speak(choice(requestResponses))
+            #    internet = speedtest.Speedtest()
+            #    downloadSpeed = internet.download()/1048576     # Megabyte = 1024*1024 Bytes
+            #    uploadSpeed   = internet.upload()/1048576
+            #    #pingSpeed     = internet.get_servers(google.com)
+            #    speak(f"Internet Download Speed is {downloadSpeed} Megabytes.")
+            #    speak(f"Internet Upload Speed is {uploadSpeed} Megabytes.")
                 
             elif "wikipedia" in query:
                 speak(choice(requestResponses))
@@ -207,7 +208,7 @@ def main():
 
 # Welcome Greeting
 def welcome():
-    hour = datetime.now().hour
+    hour = datetime.time().hour
     if hour>=0 and hour<12:
         speak(choice(morningResponses))
     elif hour >=12 and hour <18:
